@@ -31,7 +31,7 @@ func (d *Container) GenerateApp() error {
 	app.CPU = d.CPU
 	app.Memory = d.Memory
 	app.ProviderID = d.UUID
-	app.QPS = d.QPS
+	//app.QPS = d.QPS
 
 	d.App = app
 

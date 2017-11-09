@@ -120,6 +120,7 @@ func (f *SupplyChainFactory) buildPodSupply() (*proto.TemplateDTO, error) {
 		Sells(vCpuTemplateComm).
 		Sells(vMemTemplateComm).
 		Sells(vmpmAccessTemplateComm).
+		Sells(transactionTemplateComm).
 		Provider(proto.EntityDTO_VIRTUAL_MACHINE, proto.Provider_HOSTING).
 		Buys(vCpuTemplateComm).
 		Buys(vMemTemplateComm).
@@ -147,7 +148,6 @@ func (f *SupplyChainFactory) buildApplicationSupply() (*proto.TemplateDTO, error
 	// Application supply chain builder
 	appSupplyChainNodeBuilder := supplychain.NewSupplyChainNodeBuilder(proto.EntityDTO_APPLICATION)
 	appSupplyChainNodeBuilder = appSupplyChainNodeBuilder.
-		Sells(transactionTemplateComm).
 		Provider(proto.EntityDTO_CONTAINER, proto.Provider_HOSTING).
 		Buys(vCpuTemplateComm).
 		Buys(vMemTemplateComm).
@@ -159,7 +159,7 @@ func (f *SupplyChainFactory) buildApplicationSupply() (*proto.TemplateDTO, error
 func (f *SupplyChainFactory) buildVirtualApplicationSupply() (*proto.TemplateDTO, error) {
 	vAppSupplyChainNodeBuilder := supplychain.NewSupplyChainNodeBuilder(proto.EntityDTO_VIRTUAL_APPLICATION)
 	vAppSupplyChainNodeBuilder = vAppSupplyChainNodeBuilder.
-		Provider(proto.EntityDTO_APPLICATION, proto.Provider_LAYERED_OVER).
+		Provider(proto.EntityDTO_CONTAINER_POD, proto.Provider_LAYERED_OVER).
 		Buys(transactionTemplateComm)
 	return vAppSupplyChainNodeBuilder.Create()
 }

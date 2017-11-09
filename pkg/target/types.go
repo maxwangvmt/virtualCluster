@@ -42,7 +42,6 @@ type Application struct {
 
 	CPU    Resource
 	Memory Resource
-	QPS    Resource //This field is copied from Container.QPS
 }
 
 type Container struct {
@@ -64,6 +63,7 @@ type Pod struct {
 
 	CPU    Resource
 	Memory Resource
+	QPS    Resource //This field is copied from Container.QPS
 
 	Containers []*Container
 }

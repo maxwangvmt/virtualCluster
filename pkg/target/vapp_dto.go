@@ -48,8 +48,8 @@ func (vapp *VirtualApp) getCommoditiesBought(vAppBuilder *builder.EntityDTOBuild
 
 			app := container.App
 			appCommodity, err := builder.NewCommodityDTOBuilder(proto.CommodityDTO_TRANSACTION).
-				Key(app.UUID).
-				Used(app.QPS.Used).
+				Key(pod.UUID).
+				Used(pod.QPS.Used).
 				Create()
 			if err != nil {
 				glog.Errorf("failed to create commodity bought for VirtualApp[%s]-pod[%s]-container[%s]-app[%s]",
@@ -59,7 +59,7 @@ func (vapp *VirtualApp) getCommoditiesBought(vAppBuilder *builder.EntityDTOBuild
 
 			bought := []*proto.CommodityDTO{appCommodity}
 
-			appProvider := builder.CreateProvider(proto.EntityDTO_APPLICATION, app.UUID)
+			appProvider := builder.CreateProvider(proto.EntityDTO_CONTAINER_POD, pod.UUID)
 			vAppBuilder.Provider(appProvider).BuysCommodities(bought)
 			i++
 		}

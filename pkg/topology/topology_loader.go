@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/golang/glog"
-	"github.com/songbinliu/virtualCluster/pkg/target"
+	"virtualCluster/pkg/target"
 	"os"
 	"strconv"
 	"strings"
@@ -27,6 +27,8 @@ type containerTemplate struct {
 type podTemplate struct {
 	Key        string
 	Containers []string
+
+	QPS target.Resource
 }
 
 // virtual machine
@@ -209,9 +211,18 @@ func (t *TargetTopology) loadPod(fields []string) error {
 		containers = append(containers, fields[i])
 	}
 
+
+	// QPS amount
+	limitQPS := defaultQPSLimit
+	usedQPS := 0.0
+
 	pod := &podTemplate{
 		Key:        key,
 		Containers: containers,
+		QPS: target.Resource{
+			Capacity: limitQPS,
+			Used:     usedQPS,
+		},
 	}
 
 	t.PodTemplateMap[key] = pod

@@ -6,6 +6,7 @@ import (
 
 	"github.com/turbonomic/turbo-go-sdk/pkg/builder"
 	"github.com/turbonomic/turbo-go-sdk/pkg/proto"
+	//"github.com/turbonomic/kubeturbo/cmd/kubeturbo/app"
 )
 
 func (pod *Pod) BuildDTO(host *VNode) (*proto.EntityDTO, error) {
@@ -58,6 +59,11 @@ func (pod *Pod) createCommoditiesSold() ([]*proto.CommodityDTO, error) {
 	podComm, _ := CreateKeyCommodity(pod.UUID, proto.CommodityDTO_VMPM_ACCESS)
 	result = append(result, podComm)
 
+	pod.setTransactionValues()
+	appComm, _ := CreateTransactionCommodity(pod.UUID, &(pod.QPS), proto.CommodityDTO_TRANSACTION)
+	result = append(result, appComm)
+
+
 	return result, nil
 }
 
@@ -87,4 +93,18 @@ func (pod *Pod) BuildContainerDTOs() ([]*proto.EntityDTO, error) {
 	glog.V(3).Infof("There are %d DTOs for Pod[%s].", len(result)+1, pod.Name)
 
 	return result, nil
+}
+
+func (pod *Pod) setTransactionValues() {
+
+	capacity := 0.0
+	usage := 0.0
+
+	for _, container := range pod.Containers {
+		capacity += container.QPS.Capacity
+		usage += container.QPS.Used
+	}
+
+	pod.QPS.Capacity = capacity
+	pod.QPS.Used = usage
 }
